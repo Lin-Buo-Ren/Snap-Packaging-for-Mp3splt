@@ -60,6 +60,7 @@ parts:
   # Patches to fix other parts
   patches:
     source: snap/patches
+    source-type: local
     plugin: dump
 
     # DISABLED: Bug #1775582 “`organize:{ /: another-dir/ }` causes the items under host root directory to be copied in another-dir” : Bugs : Snapcraft
