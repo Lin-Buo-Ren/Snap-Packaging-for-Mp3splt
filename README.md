@@ -60,18 +60,18 @@ upstream so Mp3splt can authoritatively publish future releases.
 
 If you have any questions, [post in the Snapcraft forum](https://forum.snapcraft.io).
 
-<!-- 
 ## The Snapcrafters
 
-| [![Your Name](http://gravatar.com/avatar/bc0bced65e963eb5c3a16cab8b004431/?s=128)](https://github.com/yourname/) |
+| [![林博仁(Buo-ren, Lin)'s Avatar](https://www.gravatar.com/avatar/66a5b84972e73e895d5d68d48b1e1e21?size=128)](https://github.com/Lin-Buo-Ren/) |
 | :---: |
-| [Your Name](https://github.com/yourname/) |
---> 
+| [林博仁(Buo-ren, Lin)](https://Lin-Buo-Ren.github.io) |
 
-<!-- Uncomment and modify this when you have upstream contacts
 ## Upstream
 
-| [![Upstream Name](http://gravatar.com/avatar/bc0bced65e963eb5c3a16cab8b004431?s=128)](https://github.com/upstreamname) |
+| [![Alexandru Munteanu](https://gravatar.com/avatar/abeb34e570c9d9b83830639f8f22059c?size=128)](https://sourceforge.net/u/userid-1009175) |
 | :---: |
-| [Upstream Name](https://github.com/upstreamname) |
--->
+| [Alexandru Munteanu](https://sourceforge.net/u/userid-1009175) |
+
+| [![Matteo Trotta](https://gravatar.com/avatar/713a3a7348cd8ad9019344359ac1caaa?size=128)](https://sourceforge.net/u/mtrotta) |
+| :---: |
+| [Matteo Trotta](https://sourceforge.net/u/mtrotta) |
