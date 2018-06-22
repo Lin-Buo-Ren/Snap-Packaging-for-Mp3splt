@@ -13,9 +13,9 @@ distributions.</p>
 </p>
 -->
 
-## Install
+## Installation (not implemented yet)
 
-    sudo snap install mp3splt
+    # sudo snap install mp3splt
 
 ([Don't have snapd installed?](https://snapcraft.io/docs/core/install))
 
