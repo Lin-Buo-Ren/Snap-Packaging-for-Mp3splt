@@ -1,15 +1,389 @@
-name: my-snap-name # you probably want to 'snapcraft register <name>'
-version: '0.1' # just for humans, typically '1.2+git' or '1.3.2'
-summary: Single-line elevator pitch for your amazing snap # 79 char long summary
+%YAML 1.2
+---
+name: mp3splt-gtk
+#version: '0.9.2+dev-r1524'
+version: 0.9.2+cli2.6.2
+summary: Utility to split mp3, ogg vorbis and FLAC files without decoding
 description: |
-  This is my-snap's description. You have a paragraph or two to tell the
-  most important story about your snap. Keep it under 100 words though,
-  we live in tweetspace and your description wants to look good in the snap
-  store.
+  Mp3splt-project is a utility to split mp3, ogg vorbis and native FLAC files selecting a begin and an end time position, without decoding. It is very useful to split large mp3, ogg vorbis and native FLAC to make smaller files or to split entire albums to obtain original tracks.
 
-confinement: devmode # use 'strict' once you have the right plugs and slots
+  Mp3splt-gtk is a GTK3 GUI that uses libmp3splt.  Features:
+
+    * integrated player using gstreamer
+    * support for snackamp and audacious control
+    * advanced zoom progress bar with amplitude wave and splitpoints
+
+confinement: devmode
+grade: devel
+icon: snap/gui/icon.png
+
+apps:
+  flacsplt:
+    command: flacsplt
+  mp3splt:
+    command: mp3splt
+  mp3splt-gtk:
+    command: >
+      env
+      XDG_DATA_DIRS="${SNAP}"/share:"${XDG_DATA_DIRS}"
+      GST_PLUGIN_SYSTEM_PATH="${SNAP}"/usr/lib/"${SNAP_ARCH_TRIPLET}"/gstreamer-1.0
+      desktop-launch
+      mp3splt-gtk
+    plugs:
+    # Basic graphical resources
+    - desktop
+
+    # Input method framwork/A11Y support
+    - desktop-legacy
+
+    # X Window System access
+    - x11
+
+    # Unity DE support (e.g. global menu)
+    - unity7
+
+    # Storage access
+    - home
+    - removable-media # Non-A-C
+
+    # Audio access
+    - pulseaudio
+
+    # Recommendations from snappy-debug
+    - gsettings
+    - mount-observe # Non-A-C
+    desktop: share/applications/mp3splt-gtk.desktop
+  oggsplt:
+    command: oggsplt
 
 parts:
-  my-part:
-    # See 'snapcraft plugins'
+  # Patches to fix other parts
+  patches:
+    source: snap/patches
+    plugin: dump
+
+    # DISABLED: Bug #1775582 “`organize:{ /: another-dir/ }` causes the items under host root directory to be copied in another-dir” : Bugs : Snapcraft
+    # https://forum.snapcraft.io/t/organize-another-dir-causes-the-items-under-host-root-directory-to-be-copied-in-another-dir/5806
+    #organize:
+        #/: patches/
+    override-build: |
+      set -eu
+
+      snapcraftctl build
+
+      mkdir \
+        --parents \
+        "$SNAPCRAFT_PART_INSTALL"/patches
+      mv \
+        "$SNAPCRAFT_PART_INSTALL"/*.patch \
+        "$SNAPCRAFT_PART_INSTALL"/*.sed \
+        "$SNAPCRAFT_PART_INSTALL"/patches \
+        || true
+    override-prime: 'true'
+
+  # Enable ccache by setting up a dependency of this part
+  # and prepend /usr/lib/ccache to the PATH colon-
+  # separated array:
+  #
+  #   PATH=/usr/lib/ccache:"${PATH}"
+  #
+  # NOTE: Currently the above setup can't be applied to
+  #       scriptlets as plugins doesn't honor env. var.
+  #       customizations.
+  #
+  # or passing custom CC CXX definition to the parts'
+  # configure program.
+  ccache:
     plugin: nil
+    build-packages:
+    - ccache
+    # WORKAROUND: Non-snapcraft-generated files are pulled when nil plugin is used - snapcraft - snapcraft.io
+    # https://forum.snapcraft.io/t/non-snapcraft-generated-files-are-pulled-when-nil-plugin-is-used/5913
+    override-pull: 'true'
+    override-build: 'true'
+    override-stage: |
+      set -eu
+
+      mkdir \
+        --parents \
+        "${SNAPCRAFT_STAGE}"/build-tools/bin
+      ln \
+        --force \
+        --symbolic \
+        "$(which ccache)" \
+        "${SNAPCRAFT_STAGE}"/build-tools/bin/gcc
+      ln \
+        --force \
+        --symbolic \
+        "$(which ccache)" \
+        "${SNAPCRAFT_STAGE}"/build-tools/bin/g++
+
+  # Multiple parts required same source tree, thus splitting out to avoid re-cloning
+  # The source tree will be located at parts/mp3splt-source-tree/src
+  #mp3splt-source-tree:
+    #source: svn://svn.code.sf.net/p/mp3splt/code/mp3splt-project/trunk
+    #plugin:nil
+    #override-build: 'true'
+    #override-stage: 'true'
+    #override-prime: 'true'
+
+  # The configure setup isn't compatible with the default
+  # GNU Automake distribution provided by Ubuntu 16.04
+  # (1.15), this part setup a symlink to use the legacy
+  # 1.11 distribution which is still available from the
+  # software archive.
+  #
+  # NOTE: We can't use the alternatives system because it
+  #       will interfere with the host's setup.
+  automake-legacy:
+    # WORKAROUND: Non-snapcraft-generated files are pulled when nil plugin is used - snapcraft - snapcraft.io
+    # https://forum.snapcraft.io/t/non-snapcraft-generated-files-are-pulled-when-nil-plugin-is-used/5913
+    override-pull: 'true'
+
+    plugin: nil
+    build-packages:
+      - automake1.11
+    override-stage: |
+      set -eu
+
+      mkdir \
+        --parents \
+        "${SNAPCRAFT_STAGE}"/build-tools/bin
+      ln \
+        --force \
+        --symbolic \
+        "$(which automake-1.11)" \
+        "${SNAPCRAFT_STAGE}"/build-tools/bin/automake
+      ln \
+        --force \
+        --symbolic \
+        "$(which aclocal-1.11)" \
+        "${SNAPCRAFT_STAGE}"/build-tools/bin/aclocal
+
+  libmp3splt:
+    after:
+    - automake-legacy
+    - ccache
+    #- mp3splt-source-tree
+
+    source: http://prdownloads.sourceforge.net/mp3splt/libmp3splt-0.9.2.tar.gz
+
+    plugin: autotools
+    # REPLACED: Environment variable customization not possible with scriptlet+snapcraftctl
+    # https://bugs.launchpad.net/snapcraft/+bug/1778174
+    #configflags:
+    build-packages:
+    # REPLACED: Not compatible with the current release,
+    #           replaced by automake-legacy part
+    #- automake
+
+    - autoconf
+    - autopoint
+    - gcc
+    - gettext
+    - libc6-dev
+    - libflac-dev
+    - libid3tag0-dev
+    - libltdl-dev
+    - libmad0-dev
+    - libogg-dev
+    - libpcre3-dev
+    - libtool-bin
+    - libvorbis-dev
+    - pkg-config
+    stage-packages:
+    - libflac8
+    - libgpm2
+    - libid3tag0
+    - libltdl7
+    - libmad0
+    - libogg0
+    - libpcre3
+    - libvorbis0a
+    - libvorbisfile3
+    override-build: |
+      set -eu
+
+      # Setup ccache, automake-legacy
+      PATH="${SNAPCRAFT_STAGE}"/build-tools/bin:"${PATH}"
+
+      ./autogen.sh
+      ./configure \
+        --prefix=''
+      make \
+        --jobs="$(nproc)"
+      make \
+        DESTDIR="${SNAPCRAFT_PART_INSTALL}" \
+        install
+    filesets:
+      files-from-stage-packages-excluding-docs:
+        - usr/*
+        - -usr/share/doc/*
+      library-headers:
+        - include/*
+      libraries-shared:
+        - lib/*.so*
+        - lib/libmp3splt0/*.so*
+      libraries-static:
+        - lib/*.a
+        - lib/libmp3splt0/*.a
+      localizations:
+        - share/locale/*
+      pkgconfig:
+        - lib/pkgconfig/*
+    stage:
+      - $files-from-stage-packages-excluding-docs
+      - $library-headers
+      - $libraries-shared
+      - $libraries-static
+      - $localizations
+      - $pkgconfig
+    prime:
+      - $files-from-stage-packages-excluding-docs
+      - $libraries-shared
+      - $localizations
+
+  mp3splt:
+    after:
+      - automake-legacy
+      - ccache
+      - libmp3splt
+
+    source: http://prdownloads.sourceforge.net/mp3splt/mp3splt-2.6.2.tar.gz
+
+    plugin: autotools
+    # REPLACED: Environment variable customization not possible with scriptlet+snapcraftctl
+    # https://bugs.launchpad.net/snapcraft/+bug/1778174
+    #configflags:
+    build-packages:
+    # REPLACED: Not compatible with the current release,
+    #           replaced by automake-legacy part
+    #- automake
+
+    - autopoint
+    - gcc
+    - gettext
+    - libc6-dev
+    override-build: |
+      set -eu
+
+      # Setup ccache, automake-legacy
+      PATH="${SNAPCRAFT_STAGE}"/build-tools/bin:"${PATH}"
+
+      #./autogen.sh
+      ./configure \
+        --prefix='' \
+        --enable-flacsplt_symlink \
+        --enable-oggsplt_symlink \
+        PKG_CONFIG_PATH="${SNAPCRAFT_STAGE}"/lib/pkgconfig
+      make \
+        --jobs="$(nproc)"
+      make \
+        DESTDIR="${SNAPCRAFT_PART_INSTALL}" \
+        install
+    filesets:
+      executables:
+        - bin/*
+      localizations:
+        - share/locale/*
+      manpages:
+        - share/man/*
+    stage:
+      - $executables
+      - $localizations
+      - $manpages
+    prime:
+      - $executables
+      - $localizations
+      - $manpages
+
+  mp3splt-gtk:
+    after:
+      - automake-legacy
+      - ccache
+      - desktop-gtk3
+      - libmp3splt
+
+    source: http://prdownloads.sourceforge.net/mp3splt/mp3splt-gtk-0.9.2.tar.gz
+
+    plugin: autotools
+    #configflags
+    build-packages:
+    # REPLACED: Not compatible with the current release,
+    #           replaced by automake-legacy part
+    #- automake
+
+    - autopoint
+    - gcc
+    - gettext
+    - gnome-doc-utils
+    - libaudclient-dev
+    - libgstreamer1.0-dev
+    - libgtk-3-dev
+    - libltdl-dev
+    - libtool-bin
+    - rarian-compat
+    stage-packages:
+    - gstreamer1.0-fluendo-mp3
+    - gstreamer1.0-plugins-good
+    - gstreamer1.0-pulseaudio
+    - libaudclient2
+    - libgstreamer1.0-0
+    - libgtk-3-0
+    - libltdl7
+    override-build: |
+      set -eu
+
+      # Setup ccache, automake-legacy
+      PATH="${SNAPCRAFT_STAGE}"/build-tools/bin:"${PATH}"
+
+      #./autogen.sh
+      ./configure \
+        --disable-cutter \
+        --disable-doxygen_doc \
+        --prefix=/snap/mp3splt-gtk/current \
+        PKG_CONFIG_PATH="${SNAPCRAFT_STAGE}"/lib/pkgconfig
+      make \
+        --jobs="$(nproc)"
+      make \
+        DESTDIR="${SNAPCRAFT_PART_INSTALL}" \
+        install
+    organize:
+      snap/mp3splt-gtk/current/: /
+    filesets:
+      desktop-entries:
+      - share/applications/*
+      executables:
+      - bin/*
+      files-from-stage-packages-without-docs:
+      - usr/*
+      - -usr/share/doc/*
+      gnome-help:
+      - share/gnome/help/*
+      - share/omf/*
+      localizations:
+      - share/locale/*
+      manpages:
+      - share/man/*
+      pixmaps:
+      - share/pixmaps/*
+      resources:
+      - share/mp3splt-gtk/*
+    stage:
+    - $desktop-entries
+    - $executables
+    - $files-from-stage-packages-without-docs
+    - $gnome-help
+    - $localizations
+    - $manpages
+    - $pixmaps
+    - $resources
+    prime:
+    - $desktop-entries
+    - $executables
+    - $files-from-stage-packages-without-docs
+    - $gnome-help
+    - $localizations
+    - $manpages
+    - $pixmaps
+    - $resources
