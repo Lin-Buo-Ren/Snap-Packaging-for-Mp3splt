@@ -218,7 +218,11 @@ parts:
       make \
         DESTDIR="${SNAPCRAFT_PART_INSTALL}" \
         install
+    organize:
+      snap/mp3splt-gtk/current/: /
     filesets:
+      excluding-debris-from-organizing:
+        - -snap/*
       files-from-stage-packages-excluding-docs:
         - usr/*
         - -usr/share/doc/*
@@ -235,6 +239,7 @@ parts:
       pkgconfig:
         - lib/pkgconfig/*
     stage:
+      - $excluding-debris-from-organizing
       - $files-from-stage-packages-excluding-docs
       - $library-headers
       - $libraries-shared
@@ -356,6 +361,8 @@ parts:
     filesets:
       desktop-entries:
       - share/applications/*
+      excluding-debris-by-organizing:
+      - -snap/*
       executables:
       - bin/*
       files-from-stage-packages-without-docs:
@@ -373,6 +380,7 @@ parts:
       resources:
       - share/mp3splt-gtk/*
     stage:
+    - $excluding-debris-by-organizing
     - $desktop-entries
     - $executables
     - $files-from-stage-packages-without-docs
