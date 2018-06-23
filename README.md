@@ -13,17 +13,15 @@ distributions.</p>
 </p>
 -->
 
+![Screenshot](/home/%E6%9E%97%E5%8D%9A%E4%BB%81/%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%96%93/%E5%80%8B%E4%BA%BA%E5%B0%88%E6%A1%88/Snap%20Packaging%20for%20Mp3splt/snap/screenshots/main-view.png "Screenshot")
+
+<p align="center">Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.png" align="top" width="24" /> with 💝 by Snapcrafters</p>
+
 ## Installation (not implemented yet)
 
     # sudo snap install mp3splt
 
 ([Don't have snapd installed?](https://snapcraft.io/docs/core/install))
-
-<!-- Uncomment and modify this when you have a screenshot
-![mp3splt](screenshot.png?raw=true "my-snap-name")
--->
-
-<p align="center">Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.png" align="top" width="24" /> with :gift_heart: by Snapcrafters</p>
 
 ## Remaining Tasks
 
@@ -37,7 +35,7 @@ upstream so Mp3splt can authoritatively publish future releases.
   - [x] Update logos and references to `Mp3splt` and `mp3splt`
   - [x] Create a snap that runs in `devmode`
   - [x] Register the snap in the store, **using the preferred upstream name**
-  - [ ] Add a screenshot to this `README.md`
+  - [x] Add a screenshot to this `README.md`
   - [ ] Publish the `devmode` snap in the Snap store edge channel
   - [ ] Add install instructions to this `README.md`
   - [ ] Update snap store metadata, icons and screenshots
