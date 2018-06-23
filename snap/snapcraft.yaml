@@ -210,7 +210,9 @@ parts:
 
       ./autogen.sh
       ./configure \
-        --prefix=''
+        --datarootdir=/snap/mp3splt-gtk/current/share \
+        --libdir=/snap/mp3splt-gtk/current/lib \
+        --prefix=
       make \
         --jobs="$(nproc)"
       make \
