@@ -143,7 +143,7 @@ parts:
 
     plugin: nil
     build-packages:
-      - automake1.11
+    - automake1.11
     override-stage: |
       set -eu
 
@@ -222,40 +222,40 @@ parts:
       snap/mp3splt-gtk/current/: /
     filesets:
       excluding-debris-from-organizing:
-        - -snap/*
+      - -snap/*
       files-from-stage-packages-excluding-docs:
-        - usr/*
-        - -usr/share/doc/*
+      - usr/*
+      - -usr/share/doc/*
       library-headers:
-        - include/*
+      - include/*
       libraries-shared:
-        - lib/*.so*
-        - lib/libmp3splt0/*.so*
+      - lib/*.so*
+      - lib/libmp3splt0/*.so*
       libraries-static:
-        - lib/*.a
-        - lib/libmp3splt0/*.a
+      - lib/*.a
+      - lib/libmp3splt0/*.a
       localizations:
-        - share/locale/*
+      - share/locale/*
       pkgconfig:
-        - lib/pkgconfig/*
+      - lib/pkgconfig/*
     stage:
-      - $excluding-debris-from-organizing
-      - $files-from-stage-packages-excluding-docs
-      - $library-headers
-      - $libraries-shared
-      - $libraries-static
-      - $localizations
-      - $pkgconfig
+    - $excluding-debris-from-organizing
+    - $files-from-stage-packages-excluding-docs
+    - $library-headers
+    - $libraries-shared
+    - $libraries-static
+    - $localizations
+    - $pkgconfig
     prime:
-      - $files-from-stage-packages-excluding-docs
-      - $libraries-shared
-      - $localizations
+    - $files-from-stage-packages-excluding-docs
+    - $libraries-shared
+    - $localizations
 
   mp3splt:
     after:
-      - automake-legacy
-      - ccache
-      - libmp3splt
+    - automake-legacy
+    - ccache
+    - libmp3splt
 
     source: http://prdownloads.sourceforge.net/mp3splt/mp3splt-2.6.2.tar.gz
 
@@ -291,19 +291,19 @@ parts:
         install
     filesets:
       executables:
-        - bin/*
+      - bin/*
       localizations:
-        - share/locale/*
+      - share/locale/*
       manpages:
-        - share/man/*
+      - share/man/*
     stage:
-      - $executables
-      - $localizations
-      - $manpages
+    - $executables
+    - $localizations
+    - $manpages
     prime:
-      - $executables
-      - $localizations
-      - $manpages
+    - $executables
+    - $localizations
+    - $manpages
 
   mp3splt-gtk:
     after:
