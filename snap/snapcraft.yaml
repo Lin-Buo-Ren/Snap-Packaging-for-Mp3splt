@@ -328,6 +328,7 @@ parts:
     - ccache
     - desktop-gtk3
     - libmp3splt
+    - patches
 
     source: http://prdownloads.sourceforge.net/mp3splt/mp3splt-gtk-0.9.2.tar.gz
 
