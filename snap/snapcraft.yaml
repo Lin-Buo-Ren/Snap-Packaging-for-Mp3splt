@@ -16,7 +16,7 @@ version-script: |
       --dirty=-d
   )"
 
-  printf -- '%s' "${upstream_version}+pkg-${packaging_revision}"
+  printf -- '%s' "${upstream_version}+patched+pkg-${packaging_revision}"
 
 summary: Utility to split mp3, ogg vorbis and FLAC files without decoding
 description: |
