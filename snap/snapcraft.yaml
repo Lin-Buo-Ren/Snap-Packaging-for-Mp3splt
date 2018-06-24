@@ -2,7 +2,22 @@
 ---
 name: mp3splt-gtk
 #version: '0.9.2+dev-r1524'
-version: 0.9.2+cli2.6.2
+version: replaced-by-version-script
+version-script: |
+  set -eu
+
+  upstream_version="0.9.2+cli2.6.2"
+
+  packaging_revision="$(
+    git \
+      describe \
+      --abbrev=4 \
+      --always \
+      --dirty=-d
+  )"
+
+  printf -- '%s' "${upstream_version}+pkg-${packaging_revision}"
+
 summary: Utility to split mp3, ogg vorbis and FLAC files without decoding
 description: |
   Mp3splt-project is a utility to split mp3, ogg vorbis and native FLAC files selecting a begin and an end time position, without decoding. It is very useful to split large mp3, ogg vorbis and native FLAC to make smaller files or to split entire albums to obtain original tracks.
