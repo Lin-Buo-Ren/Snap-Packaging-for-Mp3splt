@@ -107,7 +107,7 @@ parts:
         "$SNAPCRAFT_PART_INSTALL"/*.patch \
         "$SNAPCRAFT_PART_INSTALL"/*.sed \
         "$SNAPCRAFT_PART_INSTALL"/patches \
-        || true # No patches are allowed
+        || true # Empty patches folder is allowed
     stage:
     - patches/*
     override-prime: 'true'
