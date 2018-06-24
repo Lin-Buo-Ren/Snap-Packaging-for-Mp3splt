@@ -104,6 +104,7 @@ parts:
         --parents \
         "$SNAPCRAFT_PART_INSTALL"/patches
       mv \
+        "$SNAPCRAFT_PART_INSTALL"/*.diff \
         "$SNAPCRAFT_PART_INSTALL"/*.patch \
         "$SNAPCRAFT_PART_INSTALL"/*.sed \
         "$SNAPCRAFT_PART_INSTALL"/patches \
@@ -196,8 +197,17 @@ parts:
     - automake-legacy
     - ccache
     #- mp3splt-source-tree
+    - patches
 
     source: http://prdownloads.sourceforge.net/mp3splt/libmp3splt-0.9.2.tar.gz
+    override-pull: |
+      set -eu
+
+      snapcraftctl pull
+
+      patch \
+        --strip=2 \
+        < "${SNAPCRAFT_STAGE}"/patches/libmp3splt-CVE-2017-15185.diff
 
     plugin: autotools
     # REPLACED: Environment variable customization not possible with scriptlet+snapcraftctl
