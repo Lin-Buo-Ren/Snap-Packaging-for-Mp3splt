@@ -80,6 +80,8 @@ parts:
         "$SNAPCRAFT_PART_INSTALL"/*.sed \
         "$SNAPCRAFT_PART_INSTALL"/patches \
         || true # No patches are allowed
+    stage:
+    - patches/*
     override-prime: 'true'
 
   # Enable ccache by setting up a dependency of this part
