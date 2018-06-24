@@ -32,6 +32,14 @@ confinement: devmode
 grade: devel
 icon: snap/gui/icon.png
 
+# The dbus interface - doc - snapcraft.io
+# https://forum.snapcraft.io/t/the-dbus-interface/2038
+slots:
+  dbus-service:
+    interface: dbus
+    bus: session
+    name: net.sf.mp3splt
+
 apps:
   flacsplt:
     command: flacsplt
@@ -44,6 +52,8 @@ apps:
       GST_PLUGIN_SYSTEM_PATH="${SNAP}"/usr/lib/"${SNAP_ARCH_TRIPLET}"/gstreamer-1.0
       desktop-launch
       mp3splt-gtk
+    slots:
+    - dbus-service
     plugs:
     # Basic graphical resources
     - desktop
@@ -63,6 +73,9 @@ apps:
 
     # Audio access
     - pulseaudio
+
+    # DBus access
+    - dbus
 
     # Recommendations from snappy-debug
     - gsettings
