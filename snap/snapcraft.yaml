@@ -28,7 +28,7 @@ description: |
     * support for snackamp and audacious control
     * advanced zoom progress bar with amplitude wave and splitpoints
 
-confinement: devmode
+confinement: strict
 grade: devel
 icon: snap/gui/icon.png
 
