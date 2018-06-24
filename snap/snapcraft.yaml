@@ -389,6 +389,16 @@ parts:
     - $manpages
     - $pixmaps
     - $resources
+    override-stage: |
+      set -eu
+
+      snapcraftctl stage
+
+      # Fixup desktop entry
+      sed \
+        --in-place \
+        --file "${SNAPCRAFT_STAGE}"/patches/postprocess-desktop-entries.sed \
+        "${SNAPCRAFT_STAGE}"/share/applications/*.desktop
     prime:
     - $desktop-entries
     - $executables
