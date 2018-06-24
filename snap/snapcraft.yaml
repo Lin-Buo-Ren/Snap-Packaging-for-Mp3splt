@@ -307,10 +307,10 @@ parts:
 
   mp3splt-gtk:
     after:
-      - automake-legacy
-      - ccache
-      - desktop-gtk3
-      - libmp3splt
+    - automake-legacy
+    - ccache
+    - desktop-gtk3
+    - libmp3splt
 
     source: http://prdownloads.sourceforge.net/mp3splt/mp3splt-gtk-0.9.2.tar.gz
 
