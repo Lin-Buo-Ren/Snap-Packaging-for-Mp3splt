@@ -29,7 +29,7 @@ description: |
     * advanced zoom progress bar with amplitude wave and splitpoints
 
 confinement: strict
-grade: devel
+grade: stable
 icon: snap/gui/icon.png
 
 # The dbus interface - doc - snapcraft.io
