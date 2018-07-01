@@ -7,11 +7,9 @@
 <p align="center"><b>This is the snap for Mp3splt</b>, <i>"An utility to split mp3, ogg vorbis and FLAC files without decoding"</i>. It works on Ubuntu, Fedora, Debian, and other major Linux
 distributions.</p>
 
-<!-- Uncomment and modify this when you are provided a build status badge
 <p align="center">
-<a href="https://build.snapcraft.io/user/snapcrafters/fork-and-rename-me"><img src="https://build.snapcraft.io/badge/snapcrafters/fork-and-rename-me.svg" alt="Snap Status"></a>
+<a href="https://build.snapcraft.io/user/Lin-Buo-Ren/Snap-Packaging-for-Mp3splt"><img src="https://build.snapcraft.io/badge/Lin-Buo-Ren/Snap-Packaging-for-Mp3splt.svg" alt="Snap Status"></a>
 </p>
--->
 
 ![Screenshot](snap/screenshots/main-view.png "Screenshot")
 
@@ -44,7 +42,7 @@ upstream so Mp3splt can authoritatively publish future releases.
   - [x] Update the install instructions in this `README.md`
   - [ ] Post a call for testing on the [Snapcraft Forum](https://forum.snapcraft.io) - [link]()
   - [ ] Ask a [Snapcrafters admin](https://github.com/orgs/snapcrafters/people?query=%20role%3Aowner) to fork your repo into github.com/snapcrafters, transfer the snap name from you to snapcrafters, and configure the repo for automatic publishing into edge on commit
-  - [ ] Add the provided Snapcraft build badge to this `README.md`
+  - [x] Add the provided Snapcraft build badge to this `README.md`
   - [ ] Publish the snap in the Snap store stable channel
   - [ ] Update the install instructions in this `README.md`
   - [ ] Post an announcement in the [Snapcraft Forum](https://forum.snapcraft.io) - [link]()
